@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kokteyl Menüm</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <h1>🍹 Kokteyl Menüm</h1>
+  <p>Elindeki malzemeleri seç:</p>
+
+  <div id="malzemeler">
+    <label><input type="checkbox" value="rom"> Rom</label>
+    <label><input type="checkbox" value="lime"> Lime</label>
+    <label><input type="checkbox" value="soda"> Soda</label>
+    <label><input type="checkbox" value="nane"> Nane</label>
+    <label><input type="checkbox" value="şeker"> Şeker</label>
+    <label><input type="checkbox" value="tekila"> Tekila</label>
+    <label><input type="checkbox" value="triple sec"> Triple Sec</label>
+  </div>
+
+  <button onclick="kokteylleriGoster()">Kokteylleri Göster</button>
+
+  <h2>Sonuç:</h2>
+  <div id="sonuclar"></div>
+</body>
+</html>
