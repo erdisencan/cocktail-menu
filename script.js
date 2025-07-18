@@ -1,34 +1,44 @@
 const kokteyller = [
-  {
-    ad: "Mojito",
-    malzemeler: ["rom", "lime", "nane", "şeker", "soda"]
-  },
-  {
-    ad: "Margarita",
-    malzemeler: ["tekila", "lime", "triple sec"]
-  },
-  {
-    ad: "Sade Rom",
-    malzemeler: ["rom"]
-  }
+  { ad: "Margarita", malzemeler: ["tekila", "lime", "triple-sec"] },
+  { ad: "Mojito", malzemeler: ["rom", "lime", "nane", "şeker", "soda"] },
+  { ad: "Whiskey Sour", malzemeler: ["viski", "lemon", "şeker"] },
+  { ad: "Cosmopolitan", malzemeler: ["vodka", "lime", "triple-sec", "vişne"] }
 ];
 
-function kokteylleriGoster() {
-  const secilenMalzemeler = Array.from(document.querySelectorAll('#malzemeler input:checked')).map(el => el.value);
-  const sonucDiv = document.getElementById("sonuclar");
-  sonucDiv.innerHTML = "";
+const secimler = document.querySelectorAll('input[type="checkbox"]');
+const sonucAlani = document.getElementById("sonuclar");
 
-  kokteyller.forEach(k => {
-    const eksik = k.malzemeler.filter(m => !secilenMalzemeler.includes(m));
-    const div = document.createElement("div");
-    div.className = "kokteyl";
+secimler.forEach(input => {
+  input.addEventListener("change", kokteylListele);
+});
 
-    if (eksik.length === 0) {
-      div.textContent = `✅ ${k.ad} yapılabilir!`;
-    } else {
-      div.textContent = `❌ ${k.ad} için eksik: ${eksik.join(", ")}`;
-    }
+function kokteylListele() {
+  const seciliMalzemeler = [...secimler]
+    .filter(input => input.checked)
+    .map(input => input.id);
 
-    sonucDiv.appendChild(div);
-  });
+  if (seciliMalzemeler.length === 0) {
+    sonucAlani.textContent = "Henüz seçim yapılmadı.";
+    return;
+  }
+
+  const uygunlar = kokteyller
+    .map(k => {
+      const eksik = k.malzemeler.filter(m => !seciliMalzemeler.includes(m));
+      return { ad: k.ad, eksikSayisi: eksik.length, eksik };
+    })
+    .filter(k => k.eksikSayisi <= 2)
+    .sort((a, b) => a.eksikSayisi - b.eksikSayisi);
+
+  if (uygunlar.length === 0) {
+    sonucAlani.textContent = "Uygun kokteyl bulunamadı.";
+  } else {
+    sonucAlani.innerHTML = uygunlar
+      .map(k => `<div><strong>${k.ad}</strong> ${k.eksikSayisi > 0 ? `(Eksik: ${k.eksik.join(", ")})` : ""}</div>`)
+      .join("");
+  }
 }
+
+document.getElementById("temaBtn").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
