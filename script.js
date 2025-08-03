@@ -16,7 +16,7 @@ function updateSelectedIngredients() {
 // Backend’e malzeme listesini POST eden fonksiyon
 async function saveIngredientsToBackend(ingredients) {
   try {
-    const res = await fetch("https://senin-backend-url/ingredients", {
+    const res = await fetch(https://backend-omega-ten-88.vercel.app, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ingredients })
@@ -43,7 +43,7 @@ document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
 // Sayfa yüklendiğinde seçili malzemeleri backend’den çekip işlemek için (isteğe bağlı)
 async function loadIngredientsFromBackend() {
   try {
-    const res = await fetch("https://senin-backend-url/ingredients");
+    const res = await fetch(https://backend-omega-ten-88.vercel.app/);
     const json = await res.json();
     selectedIngredients = json.ingredients || [];
     
