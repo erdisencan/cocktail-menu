@@ -19,7 +19,7 @@ const cocktails = [
 
 async function fetchIngredients() {
   try {
-    const res = await fetch("https://senin-backend-url/ingredients");
+    const res = await fetch(https://backend-omega-ten-88.vercel.app/);
     const json = await res.json();
     return json.ingredients;
   } catch (error) {
