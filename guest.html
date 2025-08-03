@@ -1,54 +1,30 @@
-// Kokteyl tarifleri örnek (senin gerçek tarif listeni kullan)
-const cocktails = [
-  {
-    name: "Mojito",
-    ingredients: ["rum", "lime", "mint", "sugar"]
-  },
-  {
-    name: "Vodka Tonic",
-    ingredients: ["vodka", "tonic"]
-  },
-  {
-    name: "Caipirinha",
-    ingredients: ["cachaca", "lime", "sugar"]
-  }
-  // ... devamı
-];
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Misafir Kokteyl Menüsü</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      color: #333;
+      padding: 2rem;
+    }
+    .cocktail {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Yapabileceğiniz Kokteyller</h1>
+  <div id="cocktailList">Yükleniyor...</div>
 
-// JSONBin'den malzeme listesini al
-async function fetchIngredients() {
-  try {
-    const res = await fetch("https://api.jsonbin.io/v3/b/688fcc15f7e7a370d1f3104c/latest");
-    const json = await res.json();
-    return json.record.ingredients;
-  } catch (error) {
-    console.error("Malzemeler alınamadı:", error);
-    return [];
-  }
-}
+  <script src="guest.js"></script>
+</body>
+</html>
 
-// Eşleşen kokteylleri göster
-async function showCocktails() {
-  const ingredients = await fetchIngredients();
-  
-  const matchedCocktails = cocktails.filter(cocktail =>
-    cocktail.ingredients.every(ing => ingredients.includes(ing))
-  );
-
-  const container = document.getElementById("cocktailList");
-  container.innerHTML = "";
-
-  if (matchedCocktails.length === 0) {
-    container.innerHTML = "<p>Uygun kokteyl bulunamadı.</p>";
-    return;
-  }
-
-  matchedCocktails.forEach(cocktail => {
-    const item = document.createElement("div");
-    item.className = "cocktail";
-    item.textContent = cocktail.name;
-    container.appendChild(item);
-  });
-}
-
-showCocktails();
