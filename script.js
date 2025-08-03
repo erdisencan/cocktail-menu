@@ -1,62 +1,78 @@
-// Örnek malzeme listesi (checkbox ya da başka inputlarla seçiliyor)
 let selectedIngredients = [];
 
-// Bu fonksiyon checkboxlardan seçilen malzemeleri alır
-function updateSelectedIngredients() {
-  selectedIngredients = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-    .map(cb => cb.value);
-  
-  // Malzeme listesi güncellendiğinde backend'e gönder
-  saveIngredientsToBackend(selectedIngredients);
-
-  // UI için yapılabilecek diğer işlemler (kokteylleri göster vs)
-  updateCocktailList();
-}
-
-// Backend’e malzeme listesini POST eden fonksiyon
-async function saveIngredientsToBackend(ingredients) {
-  try {
-    const res = await fetch(https://backend-omega-ten-88.vercel.app, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredients })
-    });
-    if (!res.ok) throw new Error("Backend güncelleme başarısız");
-    console.log("Malzemeler backend'e kaydedildi:", ingredients);
-  } catch (error) {
-    console.error("Backend'e kaydetme hatası:", error);
-  }
-}
-
-// Örnek: kokteylleri seçilen malzemelere göre filtreleyen fonksiyon
-function updateCocktailList() {
-  // Burada kokteyl listesini selectedIngredients'a göre güncelle
-  // Örneğin, filtreleme ve gösterim kodun olabilir
-  console.log("Güncel malzemelerle kokteyller güncellendi:", selectedIngredients);
-}
-
-// Checkboxlara event listener ekleyerek değişiklikleri takip et
-document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-  cb.addEventListener("change", updateSelectedIngredients);
-});
-
-// Sayfa yüklendiğinde seçili malzemeleri backend’den çekip işlemek için (isteğe bağlı)
+// Sayfa yüklendiğinde backend'den önceki malzemeleri getir
 async function loadIngredientsFromBackend() {
   try {
-    const res = await fetch(https://backend-omega-ten-88.vercel.app/);
+    const res = await fetch("https://senin-backend-url.vercel.app/ingredients");
     const json = await res.json();
     selectedIngredients = json.ingredients || [];
-    
-    // Checkboxları seçili hale getir
+
+    // Checkboxları güncelle
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
       cb.checked = selectedIngredients.includes(cb.value);
     });
 
     updateCocktailList();
   } catch (error) {
-    console.error("Backend’den malzeme yükleme hatası:", error);
+    console.error("Malzemeleri backend'den alma hatası:", error);
   }
 }
 
-// Sayfa açıldığında backend’den malzemeleri yükle
+// Seçim değişince backend'e gönder
+async function saveIngredientsToBackend(ingredients) {
+  try {
+    const res = await fetch("https://senin-backend-url.vercel.app/ingredients", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ingredients })
+    });
+    console.log("Backend'e kaydedildi:", ingredients);
+  } catch (error) {
+    console.error("Backend'e kaydedilemedi:", error);
+  }
+}
+
+// Seçilen malzemeleri güncelle
+function updateSelectedIngredients() {
+  selectedIngredients = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+    .map(cb => cb.value);
+
+  saveIngredientsToBackend(selectedIngredients);
+  updateCocktailList();
+}
+
+// Kokteyl listesini güncelle (örnek filtreleme)
+function updateCocktailList() {
+  const allCocktails = [
+    { name: "Mojito", ingredients: ["rum", "lime", "mint", "sugar"] },
+    { name: "Vodka Tonic", ingredients: ["vodka", "tonic"] },
+    { name: "Caipirinha", ingredients: ["cachaca", "lime", "sugar"] },
+    { name: "Whiskey Sour", ingredients: ["whiskey", "lemon", "sugar"] }
+  ];
+
+  const resultArea = document.getElementById("cocktail-results");
+  resultArea.innerHTML = "";
+
+  const matching = allCocktails.filter(cocktail =>
+    cocktail.ingredients.every(ing => selectedIngredients.includes(ing))
+  );
+
+  if (matching.length === 0) {
+    resultArea.textContent = "Uygun kokteyl yok 😞";
+    return;
+  }
+
+  matching.forEach(cocktail => {
+    const el = document.createElement("div");
+    el.textContent = cocktail.name;
+    resultArea.appendChild(el);
+  });
+}
+
+// Tüm checkboxlara dinleyici ekle
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener("change", updateSelectedIngredients);
+});
+
+// Sayfa açıldığında backend'den veri çek
 loadIngredientsFromBackend();
