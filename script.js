@@ -1,44 +1,62 @@
-const kokteyller = [
-  { ad: "Margarita", malzemeler: ["tekila", "lime", "triple-sec"] },
-  { ad: "Mojito", malzemeler: ["rom", "lime", "nane", "şeker", "soda"] },
-  { ad: "Whiskey Sour", malzemeler: ["viski", "lemon", "şeker"] },
-  { ad: "Cosmopolitan", malzemeler: ["vodka", "lime", "triple-sec", "vişne"] }
-];
+// Örnek malzeme listesi (checkbox ya da başka inputlarla seçiliyor)
+let selectedIngredients = [];
 
-const secimler = document.querySelectorAll('input[type="checkbox"]');
-const sonucAlani = document.getElementById("sonuclar");
+// Bu fonksiyon checkboxlardan seçilen malzemeleri alır
+function updateSelectedIngredients() {
+  selectedIngredients = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+    .map(cb => cb.value);
+  
+  // Malzeme listesi güncellendiğinde backend'e gönder
+  saveIngredientsToBackend(selectedIngredients);
 
-secimler.forEach(input => {
-  input.addEventListener("change", kokteylListele);
-});
+  // UI için yapılabilecek diğer işlemler (kokteylleri göster vs)
+  updateCocktailList();
+}
 
-function kokteylListele() {
-  const seciliMalzemeler = [...secimler]
-    .filter(input => input.checked)
-    .map(input => input.id);
-
-  if (seciliMalzemeler.length === 0) {
-    sonucAlani.textContent = "Henüz seçim yapılmadı.";
-    return;
-  }
-
-  const uygunlar = kokteyller
-    .map(k => {
-      const eksik = k.malzemeler.filter(m => !seciliMalzemeler.includes(m));
-      return { ad: k.ad, eksikSayisi: eksik.length, eksik };
-    })
-    .filter(k => k.eksikSayisi <= 2)
-    .sort((a, b) => a.eksikSayisi - b.eksikSayisi);
-
-  if (uygunlar.length === 0) {
-    sonucAlani.textContent = "Uygun kokteyl bulunamadı.";
-  } else {
-    sonucAlani.innerHTML = uygunlar
-      .map(k => `<div><strong>${k.ad}</strong> ${k.eksikSayisi > 0 ? `(Eksik: ${k.eksik.join(", ")})` : ""}</div>`)
-      .join("");
+// Backend’e malzeme listesini POST eden fonksiyon
+async function saveIngredientsToBackend(ingredients) {
+  try {
+    const res = await fetch("https://senin-backend-url/ingredients", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ingredients })
+    });
+    if (!res.ok) throw new Error("Backend güncelleme başarısız");
+    console.log("Malzemeler backend'e kaydedildi:", ingredients);
+  } catch (error) {
+    console.error("Backend'e kaydetme hatası:", error);
   }
 }
 
-document.getElementById("temaBtn").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
+// Örnek: kokteylleri seçilen malzemelere göre filtreleyen fonksiyon
+function updateCocktailList() {
+  // Burada kokteyl listesini selectedIngredients'a göre güncelle
+  // Örneğin, filtreleme ve gösterim kodun olabilir
+  console.log("Güncel malzemelerle kokteyller güncellendi:", selectedIngredients);
+}
+
+// Checkboxlara event listener ekleyerek değişiklikleri takip et
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener("change", updateSelectedIngredients);
 });
+
+// Sayfa yüklendiğinde seçili malzemeleri backend’den çekip işlemek için (isteğe bağlı)
+async function loadIngredientsFromBackend() {
+  try {
+    const res = await fetch("https://senin-backend-url/ingredients");
+    const json = await res.json();
+    selectedIngredients = json.ingredients || [];
+    
+    // Checkboxları seçili hale getir
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = selectedIngredients.includes(cb.value);
+    });
+
+    updateCocktailList();
+  } catch (error) {
+    console.error("Backend’den malzeme yükleme hatası:", error);
+  }
+}
+
+// Sayfa açıldığında backend’den malzemeleri yükle
+loadIngredientsFromBackend();
