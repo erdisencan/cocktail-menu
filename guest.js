@@ -1,54 +1,45 @@
-const cocktails = [
-  {
-    name: "Mojito",
-    ingredients: ["rum", "lime", "mint", "sugar"]
-  },
-  {
-    name: "Vodka Tonic",
-    ingredients: ["vodka", "tonic"]
-  },
-  {
-    name: "Caipirinha",
-    ingredients: ["cachaca", "lime", "sugar"]
-  },
-  {
-    name: "Whiskey Sour",
-    ingredients: ["whiskey", "lemon", "sugar"]
-  }
+// Tüm kokteyller ve gereken malzemeler
+const allCocktails = [
+  { name: "Mojito", ingredients: ["rum", "lime", "mint", "sugar"] },
+  { name: "Vodka Tonic", ingredients: ["vodka", "tonic"] },
+  { name: "Caipirinha", ingredients: ["cachaca", "lime", "sugar"] },
+  { name: "Whiskey Sour", ingredients: ["whiskey", "lemon", "sugar"] }
 ];
 
+// Backend'den güncel malzeme listesini al
 async function fetchIngredients() {
   try {
-    const res = await fetch(https://backend-omega-ten-88.vercel.app/);
+    const res = await fetch("https://senin-backend-url.vercel.app/ingredients");
     const json = await res.json();
-    return json.ingredients;
+    return json.ingredients || [];
   } catch (error) {
     console.error("Malzeme verisi alınamadı:", error);
     return [];
   }
 }
 
+// Uygun kokteylleri göster
+async function showAvailableCocktails() {
+  const availableIngredients = await fetchIngredients();
 
-async function showCocktails() {
-  const ingredients = await fetchIngredients();
-  const matchedCocktails = cocktails.filter(cocktail =>
-    cocktail.ingredients.every(ing => ingredients.includes(ing))
+  const matching = allCocktails.filter(cocktail =>
+    cocktail.ingredients.every(ing => availableIngredients.includes(ing))
   );
 
-  const container = document.getElementById("cocktailList");
-  container.innerHTML = "";
+  const resultArea = document.getElementById("guest-results");
+  resultArea.innerHTML = "";
 
-  if (matchedCocktails.length === 0) {
-    container.innerHTML = "<p>Uygun kokteyl bulunamadı.</p>";
+  if (matching.length === 0) {
+    resultArea.textContent = "Uygun kokteyl yok 😞";
     return;
   }
 
-  matchedCocktails.forEach(cocktail => {
-    const item = document.createElement("div");
-    item.className = "cocktail";
-    item.textContent = cocktail.name;
-    container.appendChild(item);
+  matching.forEach(cocktail => {
+    const el = document.createElement("div");
+    el.textContent = cocktail.name;
+    resultArea.appendChild(el);
   });
 }
 
-showCocktails();
+// Sayfa açıldığında çalıştır
+showAvailableCocktails();
