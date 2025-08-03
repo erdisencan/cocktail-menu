@@ -6,16 +6,15 @@ const allCocktails = [
 ];
 
 async function fetchIngredients() {
-  const res = await fetch("https://cocktail-menu-nlac2n1bf-erdis-projects-3d101cd6.vercel.app/ingredients");
+  const res = await fetch("/ingredients");
   const json = await res.json();
   return json.ingredients || [];
 }
 
 async function showAvailableCocktails() {
   const availableIngredients = await fetchIngredients();
-  console.log("Alınan malzemeler:", availableIngredients);
-  const matching = allCocktails.filter(cocktail =>
-    cocktail.ingredients.every(ing => availableIngredients.includes(ing))
+  const matching = allCocktails.filter(c =>
+    c.ingredients.every(ing => availableIngredients.includes(ing))
   );
 
   const container = document.getElementById("guest-results");
