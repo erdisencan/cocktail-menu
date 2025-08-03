@@ -19,14 +19,15 @@ const cocktails = [
 
 async function fetchIngredients() {
   try {
-    const res = await fetch("https://api.jsonbin.io/v3/b/688fcc15f7e7a370d1f3104c/latest");
+    const res = await fetch("https://senin-backend-url/ingredients");
     const json = await res.json();
-    return json.record.ingredients;
+    return json.ingredients;
   } catch (error) {
     console.error("Malzeme verisi alınamadı:", error);
     return [];
   }
 }
+
 
 async function showCocktails() {
   const ingredients = await fetchIngredients();
