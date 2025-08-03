@@ -1,67 +1,15 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cocktail Menü</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="temaBtn">🌙</button>
+  <h1>Elinizdeki Malzemeleri Seçin</h1>
+  <div id="ingredient-list"></div>
+  <button id="save-button">Kaydet</button>
 
-  <div class="container">
-    <h1>Cocktail Menüsü</h1>
-
-    <section>
-      <h2>Alkoller</h2>
-      <div class="kategori"><input type="checkbox" id="vodka"><label for="vodka">Vodka</label></div>
-      <div class="kategori"><input type="checkbox" id="gin"><label for="gin">Gin</label></div>
-      <div class="kategori"><input type="checkbox" id="rom"><label for="rom">Rom</label></div>
-      <div class="kategori"><input type="checkbox" id="tekila"><label for="tekila">Tekila</label></div>
-      <div class="kategori"><input type="checkbox" id="viski"><label for="viski">Viski</label></div>
-    </section>
-
-    <section>
-      <h2>Likörler</h2>
-      <div class="kategori"><input type="checkbox" id="triple-sec"><label for="triple-sec">Triple Sec</label></div>
-      <div class="kategori"><input type="checkbox" id="kahve-likoru"><label for="kahve-likoru">Kahve Likörü</label></div>
-      <div class="kategori"><input type="checkbox" id="amaretto"><label for="amaretto">Amaretto</label></div>
-      <div class="kategori"><input type="checkbox" id="irish-cream"><label for="irish-cream">Irish Cream</label></div>
-    </section>
-
-    <section>
-      <h2>Meyveler / Sular</h2>
-      <div class="kategori"><input type="checkbox" id="lime"><label for="lime">Lime</label></div>
-      <div class="kategori"><input type="checkbox" id="lemon"><label for="lemon">Limon</label></div>
-      <div class="kategori"><input type="checkbox" id="portakal"><label for="portakal">Portakal</label></div>
-      <div class="kategori"><input type="checkbox" id="ananas"><label for="ananas">Ananas Suyu</label></div>
-      <div class="kategori"><input type="checkbox" id="nar"><label for="nar">Nar Suyu</label></div>
-      <div class="kategori"><input type="checkbox" id="vişne"><label for="vişne">Vişne</label></div>
-    </section>
-
-    <section>
-      <h2>Karıştırıcılar</h2>
-      <div class="kategori"><input type="checkbox" id="soda"><label for="soda">Soda</label></div>
-      <div class="kategori"><input type="checkbox" id="tonik"><label for="tonik">Tonik</label></div>
-      <div class="kategori"><input type="checkbox" id="cola"><label for="cola">Cola</label></div>
-      <div class="kategori"><input type="checkbox" id="enerji"><label for="enerji">Enerji İçeceği</label></div>
-    </section>
-
-    <section>
-      <h2>Garnitürler</h2>
-      <div class="kategori"><input type="checkbox" id="nane"><label for="nane">Nane</label></div>
-      <div class="kategori"><input type="checkbox" id="şeker"><label for="şeker">Toz Şeker</label></div>
-      <div class="kategori"><input type="checkbox" id="buz"><label for="buz">Buz</label></div>
-      <div class="kategori"><input type="checkbox" id="zeytin"><label for="zeytin">Zeytin</label></div>
-      <div class="kategori"><input type="checkbox" id="kiraz"><label for="kiraz">Kokteyl Kirazı</label></div>
-    </section>
-
-    <section>
-      <h2>Uygun Kokteyller</h2>
-      <div id="sonuclar">Henüz seçim yapılmadı.</div>
-    </section>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>
