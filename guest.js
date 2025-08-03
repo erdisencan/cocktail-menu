@@ -1,4 +1,3 @@
-// Tüm kokteyller ve gereken malzemeler
 const allCocktails = [
   { name: "Mojito", ingredients: ["rum", "lime", "mint", "sugar"] },
   { name: "Vodka Tonic", ingredients: ["vodka", "tonic"] },
@@ -6,40 +5,32 @@ const allCocktails = [
   { name: "Whiskey Sour", ingredients: ["whiskey", "lemon", "sugar"] }
 ];
 
-// Backend'den güncel malzeme listesini al
 async function fetchIngredients() {
-  try {
-    const res = await fetch("https://senin-backend-url.vercel.app/ingredients");
-    const json = await res.json();
-    return json.ingredients || [];
-  } catch (error) {
-    console.error("Malzeme verisi alınamadı:", error);
-    return [];
-  }
+  const res = await fetch("https://cocktail-menu-nlac2n1bf-erdis-projects-3d101cd6.vercel.app/ingredients");
+  const json = await res.json();
+  return json.ingredients || [];
 }
 
-// Uygun kokteylleri göster
 async function showAvailableCocktails() {
   const availableIngredients = await fetchIngredients();
-
+  console.log("Alınan malzemeler:", availableIngredients);
   const matching = allCocktails.filter(cocktail =>
     cocktail.ingredients.every(ing => availableIngredients.includes(ing))
   );
 
-  const resultArea = document.getElementById("guest-results");
-  resultArea.innerHTML = "";
+  const container = document.getElementById("guest-results");
+  container.innerHTML = "";
 
   if (matching.length === 0) {
-    resultArea.textContent = "Uygun kokteyl yok 😞";
+    container.textContent = "Uygun kokteyl bulunamadı 😞";
     return;
   }
 
-  matching.forEach(cocktail => {
+  matching.forEach(c => {
     const el = document.createElement("div");
-    el.textContent = cocktail.name;
-    resultArea.appendChild(el);
+    el.textContent = c.name;
+    container.appendChild(el);
   });
 }
 
-// Sayfa açıldığında çalıştır
-showAvailableCocktails();
+document.addEventListener("DOMContentLoaded", showAvailableCocktails);
